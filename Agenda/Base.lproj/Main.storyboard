@@ -54,7 +54,11 @@
                     <navigationItem key="navigationItem" title="Agenda" id="aoB-Jw-lAm">
                         <barButtonItem key="backBarButtonItem" title=" " id="M57-Hv-I3X"/>
                         <leftBarButtonItems>
-                            <barButtonItem systemItem="bookmarks" id="dzi-1s-s3a"/>
+                            <barButtonItem systemItem="bookmarks" id="dzi-1s-s3a">
+                                <connections>
+                                    <action selector="buttonCalculaMedia:" destination="Qhi-kM-lyB" id="Ttx-Xj-IQM"/>
+                                </connections>
+                            </barButtonItem>
                             <barButtonItem systemItem="search" id="eTQ-eO-deP"/>
                         </leftBarButtonItems>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="4cp-jd-Mnv">

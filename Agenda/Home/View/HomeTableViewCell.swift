@@ -19,6 +19,7 @@ class HomeTableViewCell: UITableViewCell {
     func configuraCelula(_ aluno:Aluno){
         labelNomeDoAluno.text = aluno.nome
         imageAluno.layer.cornerRadius = imageAluno.frame.width / 2
+        imageAluno.layer.masksToBounds = true
         
         let gerenciadorDeArquivos = FileManager.default
         

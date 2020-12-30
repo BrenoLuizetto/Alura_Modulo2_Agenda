@@ -45,11 +45,15 @@ class HomeTableViewController: UITableViewController, UISearchBarDelegate, NSFet
         self.navigationItem.searchController = searchController
     }
     
-    func recuperaAluno(){
+    func recuperaAluno(filtro:String = ""){
         
         let pesquisaAluno: NSFetchRequest<Aluno> = Aluno.fetchRequest()
         let ordenaPorNome = NSSortDescriptor(key: "nome", ascending: true)
         pesquisaAluno.sortDescriptors = [ordenaPorNome]
+        
+        if verificaFiltro(filtro) {
+            pesquisaAluno.predicate = filtraAluno(filtro)
+        }
         
         gerenciadorDeResultados = NSFetchedResultsController(fetchRequest: pesquisaAluno, managedObjectContext: contexto, sectionNameKeyPath: nil, cacheName: nil)
         
@@ -62,6 +66,18 @@ class HomeTableViewController: UITableViewController, UISearchBarDelegate, NSFet
         catch{
             print(error.localizedDescription)
         }
+    }
+    
+    func filtraAluno(_ filtro:String) -> NSPredicate {
+        return NSPredicate(format: "nome CONTAINS %@", filtro)
+    }
+    
+    func verificaFiltro(_ filtro:String) -> Bool{
+        if filtro.isEmpty {
+            return false
+        }
+        
+        return true
     }
     
     @objc func abrirActionSheet(_ longPress: UILongPressGestureRecognizer){
@@ -147,14 +163,24 @@ class HomeTableViewController: UITableViewController, UISearchBarDelegate, NSFet
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            guard let alunoSelecionado = gerenciadorDeResultados?.fetchedObjects![indexPath.row] else {return}
-            contexto.delete(alunoSelecionado)
             
-            do{
-                try contexto.save()
-            } catch{
-                print(error.localizedDescription)
-            }
+            AutenticacaoLocal().autorizaUsuario(completion: { (autenticado) in
+                if autenticado {
+                    DispatchQueue.main.async {
+                    
+                    guard let alunoSelecionado = self.gerenciadorDeResultados?.fetchedObjects![indexPath.row] else {return}
+                    self.contexto.delete(alunoSelecionado)
+                    
+                    do{
+                        try self.contexto.save()
+                    } catch{
+                        print(error.localizedDescription)
+                    }
+                }
+                }
+                    
+            })
+            
             
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
@@ -187,5 +213,32 @@ class HomeTableViewController: UITableViewController, UISearchBarDelegate, NSFet
             tableView.reloadData()
         }
     }
-
+    
+    
+    @IBAction func buttonCalculaMedia(_ sender: UIBarButtonItem) {
+        guard let listaDeAlunos = gerenciadorDeResultados?.fetchedObjects else {return}
+        CalculaMediaAPI().calculaMediaGeralDosAlunos(alunos: listaDeAlunos, sucesso: { (dicionario) in
+            if let alerta = Notificacoes().exibeNotificacaoDeMediaDosAlunos(dicionarioDeMedia: dicionario){
+            self.present(alerta, animated: true, completion: nil)
+            }
+        }) { (error) in
+            print(error.localizedDescription)
+        }
+        
+    }
+    
+    //MARK: - SearchBarDelegate
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let nomeDoAluno = searchBar.text else {return}
+        recuperaAluno(filtro: nomeDoAluno)
+        tableView.reloadData()
+        }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        recuperaAluno()
+        tableView.reloadData()
+    }
+  
+    
 }

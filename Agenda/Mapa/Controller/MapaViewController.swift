@@ -16,6 +16,7 @@ class MapaViewController: UIViewController {
     //MARK: - Variavel
     
     var aluno:Aluno?
+    lazy var localizacao = Localizacao()
     
     //MARK: - View Life Cycle
 
@@ -24,6 +25,7 @@ class MapaViewController: UIViewController {
         self.navigationItem.title = getTitulo()
         localizacaoInicial()
         localizarAluno()
+        mapa.delegate = localizacao
     }
     
     //MARK: - Métodos
@@ -31,7 +33,7 @@ class MapaViewController: UIViewController {
     func localizacaoInicial(){
         Localizacao().converteEnderecoEmCoordenadas(endereco: "Caelum - São Paulo")
         { (localizacaoEncontrada) in
-            let pino = self.connfiguraPino(titulo: "Caelum", localizacao: localizacaoEncontrada)
+            let pino = Localizacao().configuraPino(titulo: "Caelum", localizacao: localizacaoEncontrada, cor: .black, icon: nil)
             let regiao = MKCoordinateRegionMakeWithDistance(pino.coordinate, 5000, 5000)
             
             self.mapa.setRegion(regiao, animated: true)
@@ -42,7 +44,9 @@ class MapaViewController: UIViewController {
     func localizarAluno(){
         if let aluno = aluno{
             Localizacao().converteEnderecoEmCoordenadas(endereco: aluno.endereco!) { (localizacaoEncontrada) in
-                let pino = self.connfiguraPino(titulo: aluno.nome!, localizacao: localizacaoEncontrada)
+//                let pino = self.connfiguraPino(titulo: aluno.nome!, localizacao: localizacaoEncontrada)
+                let pino = Localizacao().configuraPino(titulo: aluno.nome!, localizacao: localizacaoEncontrada, cor: nil, icon: nil)
+                
                 self.mapa.addAnnotation(pino)
             }
             
@@ -53,14 +57,7 @@ class MapaViewController: UIViewController {
             return "Localizar Alunos"
         }
     
-    func connfiguraPino(titulo: String, localizacao: CLPlacemark) -> MKPointAnnotation {
-        let pino = MKPointAnnotation()
-        pino.title = titulo
-        pino.coordinate = localizacao.location!.coordinate
-        
-        
-        return pino
-    }
+ 
     
   
 
