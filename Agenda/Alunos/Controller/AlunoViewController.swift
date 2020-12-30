@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class AlunoViewController: UIViewController, ImagePickerFotoSelecionada {
     
@@ -25,7 +26,14 @@ class AlunoViewController: UIViewController, ImagePickerFotoSelecionada {
     
     // MARK: - Atributos
     
+    var contexto: NSManagedObjectContext{
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        return appDelegate.persistentContainer.viewContext
+    }
+    
     let imagePicker = ImagePicker()
+    
+    var aluno: Aluno?
     
     // MARK: - View Lifecycle
 
@@ -40,6 +48,23 @@ class AlunoViewController: UIViewController, ImagePickerFotoSelecionada {
     
     func setup() {
         imagePicker.delegate = self
+        
+        guard let alunoSelecionado = aluno else {return}
+        
+        textFieldNome.text = alunoSelecionado.nome
+        textFieldEndereco.text = alunoSelecionado.endereco
+        textFieldTelefone.text = alunoSelecionado.telefone
+        textFieldSite.text = alunoSelecionado.site
+        textFieldNota.text = "\(alunoSelecionado.nota)"
+        
+        let gerenciadorDeArquivos = FileManager.default
+        
+        let caminho = NSHomeDirectory() as NSString
+        let caminhoDaImagem = caminho.appendingPathComponent(alunoSelecionado.foto!)
+        
+        if gerenciadorDeArquivos.fileExists(atPath: caminhoDaImagem){
+            imageAluno.image = UIImage(contentsOfFile: caminhoDaImagem)
+        }
     }
     
     func arredondaView() {
@@ -83,6 +108,52 @@ class AlunoViewController: UIViewController, ImagePickerFotoSelecionada {
     
     @IBAction func stepperNota(_ sender: UIStepper) {
         self.textFieldNota.text = "\(sender.value)"
+    }
+    @IBAction func buttonSalvar(_ sender: UIButton) {
+        
+        if aluno == nil {
+             aluno = Aluno(context: contexto)
+        }
+        
+        let caminhoDoSistemaDeArquivos = NSHomeDirectory() as NSString
+        let diretorioDeImagens = "Documents/images"
+        let caminhoCompleto = caminhoDoSistemaDeArquivos.appendingPathComponent(diretorioDeImagens)
+        
+        let gerenciadorDeArquivos = FileManager.default
+        
+        if !gerenciadorDeArquivos.fileExists(atPath: caminhoCompleto){
+        do{
+            try gerenciadorDeArquivos.createDirectory(atPath: caminhoCompleto, withIntermediateDirectories: false, attributes: nil)
+            } catch {
+            print(error.localizedDescription)
+            }
+        }
+        
+        let nomeDaImagem = String(format: "%@.jpeg", aluno!.objectID.uriRepresentation().lastPathComponent)
+        let url = URL(fileURLWithPath: String(format: "%@/%@", caminhoCompleto, nomeDaImagem))
+        
+        guard let imagem = imageAluno.image else {return}
+        guard let data = UIImagePNGRepresentation(imagem) else {return}
+        
+        do{
+            try data.write(to: url)
+        } catch{
+            print(error.localizedDescription)
+        }
+        
+        aluno?.nome = textFieldNome.text
+        aluno?.endereco = textFieldEndereco.text
+        aluno?.telefone = textFieldTelefone.text
+        aluno?.site = textFieldSite.text
+        aluno?.nota = (textFieldNota.text! as NSString).doubleValue
+        aluno?.foto = String(format: "%@/%@", diretorioDeImagens, nomeDaImagem)
+        
+        do{
+            try contexto.save()
+            navigationController?.popViewController(animated: true)
+        }catch{
+            print(error.localizedDescription)
+        }
     }
     
     

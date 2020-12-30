@@ -15,15 +15,29 @@ class HomeTableViewCell: UITableViewCell {
     @IBOutlet weak var imageAluno: UIImageView!
     @IBOutlet weak var labelNomeDoAluno: UILabel!
 
+    
+    func configuraCelula(_ aluno:Aluno){
+        labelNomeDoAluno.text = aluno.nome
+        imageAluno.layer.cornerRadius = imageAluno.frame.width / 2
+        
+        let gerenciadorDeArquivos = FileManager.default
+        
+        let caminho = NSHomeDirectory() as NSString
+        let caminhoDaImagem = caminho.appendingPathComponent(aluno.foto!)
+        
+        if gerenciadorDeArquivos.fileExists(atPath: caminhoDaImagem){
+            imageAluno.image = UIImage(contentsOfFile: caminhoDaImagem)
+        }
+    
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
 
 }
