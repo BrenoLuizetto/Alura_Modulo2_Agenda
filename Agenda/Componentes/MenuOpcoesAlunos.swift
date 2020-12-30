@@ -10,6 +10,7 @@ import UIKit
 
 enum MenuActionSheetAluno {
     case sms
+    case ligacao
 }
 
 class MenuOpcoesAlunos: NSObject {
@@ -20,6 +21,11 @@ class MenuOpcoesAlunos: NSObject {
             completion(.sms)
         }
         menu.addAction(sms)
+        
+        let ligacao = UIAlertAction(title: "realizar ligação" , style: .default) { (acao) in
+            completion(.ligacao)
+        }
+        menu.addAction(ligacao)
         
         let cancelar = UIAlertAction(title: "Cancelar", style: .cancel, handler: nil)
         menu.addAction(cancelar)
