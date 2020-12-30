@@ -19,6 +19,7 @@
 		F1AA96ED259CC1E300F8C628 /* MenuOpcoesAlunos.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AA96EC259CC1E300F8C628 /* MenuOpcoesAlunos.swift */; };
 		F1AA96EF259CC58B00F8C628 /* Mensagem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AA96EE259CC58B00F8C628 /* Mensagem.swift */; };
 		F1AA96F1259CDB3E00F8C628 /* Localizacao.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AA96F0259CDB3E00F8C628 /* Localizacao.swift */; };
+		F1AA96F5259CDFC200F8C628 /* MapaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AA96F4259CDFC200F8C628 /* MapaViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		F1AA96EC259CC1E300F8C628 /* MenuOpcoesAlunos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuOpcoesAlunos.swift; sourceTree = "<group>"; };
 		F1AA96EE259CC58B00F8C628 /* Mensagem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mensagem.swift; sourceTree = "<group>"; };
 		F1AA96F0259CDB3E00F8C628 /* Localizacao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localizacao.swift; sourceTree = "<group>"; };
+		F1AA96F4259CDFC200F8C628 /* MapaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapaViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 		03AA174C1FC84154003CB2B8 /* Agenda */ = {
 			isa = PBXGroup;
 			children = (
+				F1AA96F2259CDF8A00F8C628 /* Mapa */,
 				03AA174D1FC84154003CB2B8 /* AppDelegate.swift */,
 				03AA17621FC8433E003CB2B8 /* Home */,
 				03AA17691FC84A2D003CB2B8 /* Alunos */,
@@ -131,6 +134,22 @@
 				F1AA96F0259CDB3E00F8C628 /* Localizacao.swift */,
 			);
 			path = Componentes;
+			sourceTree = "<group>";
+		};
+		F1AA96F2259CDF8A00F8C628 /* Mapa */ = {
+			isa = PBXGroup;
+			children = (
+				F1AA96F3259CDFA100F8C628 /* Controller */,
+			);
+			path = Mapa;
+			sourceTree = "<group>";
+		};
+		F1AA96F3259CDFA100F8C628 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				F1AA96F4259CDFC200F8C628 /* MapaViewController.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -212,6 +231,7 @@
 				03AA17681FC843B1003CB2B8 /* HomeTableViewCell.swift in Sources */,
 				F1AA96ED259CC1E300F8C628 /* MenuOpcoesAlunos.swift in Sources */,
 				F1AA96EF259CC58B00F8C628 /* Mensagem.swift in Sources */,
+				F1AA96F5259CDFC200F8C628 /* MapaViewController.swift in Sources */,
 				03AA174E1FC84154003CB2B8 /* AppDelegate.swift in Sources */,
 				F1AA96F1259CDB3E00F8C628 /* Localizacao.swift in Sources */,
 			);
