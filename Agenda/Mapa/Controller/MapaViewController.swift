@@ -51,6 +51,7 @@ class MapaViewController: UIViewController, CLLocationManagerDelegate {
                 break
             default:
                 break
+                
             }
         }
     }
